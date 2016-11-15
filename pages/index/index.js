@@ -16,14 +16,13 @@ Page({
     function a(){
       wx.onAccelerometerChange(function(res) {
         var curTime = new Date().getTime()
-        var SHAKE_THRESHOLD = 30
+        var SHAKE_THRESHOLD = 60
         var last_update = that.data.last_update
         var len = util.res.length
         var list = Math.floor(Math.random()*(len-1))
         if ((curTime - last_update) > 100) {
           var diffTime = curTime - last_update; 
           var speed = Math.abs(res.x + res.y + res.z - that.data.last_x - that.data.last_y - that.data.last_z) / diffTime * 10000;
-          console.log(speed)
           if (speed > SHAKE_THRESHOLD && !determination) {
             determination = true
             determination = that.f(util.res[list])
