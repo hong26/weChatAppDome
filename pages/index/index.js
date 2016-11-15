@@ -4,27 +4,38 @@ Page({
     x:util.res[0].title,
     y:util.res[0].summary,
     z:util.res[0].img,
-    s:0,
     hidden: false,
+    last_update:0,
+    last_x:0,
+    last_y:0,
+    last_z:0
   },
   onReady: function (e) {
     var determination = false
     var that = this
     function a(){
       wx.onAccelerometerChange(function(res) {
-        that.setData({
-          s: res.x
-        })
+        var curTime = new Date().getTime()
+        var SHAKE_THRESHOLD = 30
+        var last_update = that.data.last_update
         var len = util.res.length
         var list = Math.floor(Math.random()*(len-1))
-        if(res.x>0.3 && res.y>0.3 && !determination){
-          determination = true
-          determination = that.f(util.res[list])
-        }else{
-          return
+        if ((curTime - last_update) > 100) {
+          var diffTime = curTime - last_update; 
+          var speed = Math.abs(res.x + res.y + res.z - that.data.last_x - that.data.last_y - that.data.last_z) / diffTime * 10000;
+          console.log(speed)
+          if (speed > SHAKE_THRESHOLD && !determination) {
+            determination = true
+            determination = that.f(util.res[list])
+          }
+          that.setData({
+            last_update: curTime,
+            last_x: res.x,
+            last_y: res.y,
+            last_z: res.z
+          })
         }
       })
-      console.log(0.6*100>0)
     }
     a()
  },
@@ -43,6 +54,6 @@ Page({
           hidden: true,
         })        
       }
-      return false
+    return false
  }
 })
