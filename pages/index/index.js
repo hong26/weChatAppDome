@@ -53,6 +53,10 @@ Page({
           hidden: true,
         })        
       }
+    wx.playBackgroundAudio({
+      dataUrl: 'http://fjyd.sc.chinaz.com/files/download/sound1/201410/5012.mp3',
+      title: 'weixin'
+    })  
     return false
  }
 })
